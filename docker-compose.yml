@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    entrypoint: .docker/entrypoint.sh
+    container_name: inventorsoft-pet-project
+    ports:
+      - '3333:3333'
+      - '3334:9229'
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - pg_db
+    networks:
+      - database
+  pg_db:
+    build: .docker/db
+    container_name: pg_db
+    restart: always
+    tty: true
+    ports:
+      - '5432:5432'
+    volumes:
+      - .docker/db/data:/var/lib/postgresql/data
+    networks:
+      - database
+    environment:
+        POSTGRES_USER: 'db-admin'
+        POSTGRES_PASSWORD: '123'
+        POSTGRES_DB: 'invent-pet-api'
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: inventorsoft-pet-project-redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: inventorsoft-pet-project-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - '8001:80'
+    depends_on:
+      - pg_db
+networks:
+  database:
+    driver: bridge
