@@ -17,3 +17,5 @@ jobs:
         run: |
           chmod 755 .docker/entrypoint.sh
           sudo docker-compose up -d
+          docker run --network container:inventorsoft-pet-project_app appropriate/curl -s --retry 10 --retry-connrefused http://localhost:3333/
+
