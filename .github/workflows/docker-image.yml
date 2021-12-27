@@ -15,5 +15,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: |
-          chmod 755 docker/entrypoint.sh
+          chmod 755 .docker/entrypoint.sh
           sudo docker-compose up -d
